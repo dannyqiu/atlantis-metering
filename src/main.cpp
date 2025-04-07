@@ -134,7 +134,8 @@ bool sendJsonData(String url, String json_data) {
 
   WiFiClientSecure httpsClient; // Use WiFiClientSecure for HTTPS
   HTTPClient http;
-  if (url.startsWith("https:")) {
+  bool is_https = url.startsWith("https:");
+  if (is_https) {
     httpsClient.setInsecure();
     http.begin(httpsClient, url);
   }
@@ -153,7 +154,9 @@ bool sendJsonData(String url, String json_data) {
   printHeaders(http);
   printResponse(http);
   if (httpResponseCode < 0) {
-    printSslError(httpsClient);
+    if (is_https) {
+      printSslError(httpsClient);
+    }
   }
 
   http.end();
